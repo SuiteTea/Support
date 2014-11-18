@@ -1,0 +1,21 @@
+{
+    "name": "suitetea/support",
+    "description": "Support Classes for SuiteTea Framework",
+    "authors": [
+        {
+            "name": "Matthew Cuyar",
+            "email": "matt@fuelingbrands.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "autoload": {
+        "files": [],
+        "classmap": [],
+        "psr-0": {
+            "SuiteTea\\Support\\": "src"
+        }
+    },
+    "minimum-stability": "dev"
+}
