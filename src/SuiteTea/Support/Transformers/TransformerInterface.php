@@ -8,6 +8,6 @@ interface TransformerInterface {
 	 * @var array $data
 	 * @return array
 	 */
-	public static function transform($data);
+	public function transform($data);
 	
 }
