@@ -1,102 +1,33 @@
 <?php namespace SuiteTea\Support\Collection;
 
-use ArrayAccess;
+use Illuminate\Support\Collection;
 
-class Record implements ArrayAccess {
-	
-	/**
-	 * @var array|null
-	 */
-    protected $data;
-	
-	/**
-	 * Create a new response record instance.
-	 *
-	 * @param  array $data
-	 * @return void
-	 */
-	public function __construct($data = array())
-	{
-		$this->data = $data instanceof Arrayable ? $data->toArray() : (array) $data;
-	}
-	
-	/**
-	 * Return record object as an array
-	 *
-	 * @return array
-	 */
-	public function toArray()
-	{
-		return $this->data;
-	}
-	
-	
+class Record extends Collection {
+
 	/**
 	 * Add a piece of data to the record.
 	 *
-	 * @param  string|array  $key
-	 * @param  mixed   $value
-	 * @return \ClientLib\Api\ResponseRecord
+	 * @param  mixed $key
+	 * @param  mixed $value
+	 * @return \SuiteTea\Support\Collection\Record
 	 */
 	public function with($key, $value = null)
 	{
-		if (is_array($key))
-		{
-			$this->data = array_merge($this->data, $key);
+		if (is_string($key)) {
+			$this->put($key, $value);
 		}
-		else
-		{
-			$this->data[$key] = $value;
+		else {
+			$this->items = $this->merge($key)->toArray();
 		}
 
 		return $this;
 	}
-	
-	/**
-	 * Determine if a piece of data is bound.
-	 *
-	 * @param  string  $key
-	 * @return bool
-	 */
-	public function offsetExists($key)
+
+	public function except(array $except = [])
 	{
-		return array_key_exists($key, $this->data);
+		return new static(array_except($this->items, $except));
 	}
 
-	/**
-	 * Get a piece of bound data to the record.
-	 *
-	 * @param  string  $key
-	 * @return mixed
-	 */
-	public function offsetGet($key)
-	{
-		return $this->data[$key];
-	}
-
-	/**
-	 * Set a piece of data on the record.
-	 *
-	 * @param  string  $key
-	 * @param  mixed   $value
-	 * @return void
-	 */
-	public function offsetSet($key, $value)
-	{
-		$this->with($key, $value);
-	}
-
-	/**
-	 * Unset a piece of data from the record.
-	 *
-	 * @param  string  $key
-	 * @return void
-	 */
-	public function offsetUnset($key)
-	{
-		unset($this->data[$key]);
-	}
-	
 	/**
 	 * Get a piece of data from the record.
 	 *
@@ -104,7 +35,7 @@ class Record implements ArrayAccess {
 	 */
 	public function &__get($key)
 	{
-		return $this->data[$key];
+		return $this->items[$key];
 	}
 
 	/**
@@ -116,7 +47,7 @@ class Record implements ArrayAccess {
 	 */
 	public function __set($key, $value)
 	{
-		$this->with($key, $value);
+		$this->put($key, $value);
 	}
 	
 	/**
