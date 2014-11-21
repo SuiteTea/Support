@@ -3,34 +3,49 @@
 use Illuminate\Support\Collection;
 
 abstract class DataTransformer implements TransformerInterface {
-	
+
 	/**
 	 * Collection
 	 *
 	 * @var \Illuminate\Support\Collection
 	 */
 	protected $collection;
-	
+
 	/**
-	 * Transformer Constructor
+	 * Create a new Data Transformer.
+	 *
+	 * @param  array  $items
 	 */
-	public function __construct(Collection $collection)
+	public function __construct(array $items = array())
 	{
-		$this->collection = $collection;
-		
+		$this->collection = new Collection($items);
 		$this->init();
 	}
-	
+
+	/**
+	 * Return the collection instance.
+	 *
+	 * @return \Illuminate\Support\Collection
+	 */
+	public function getCollection()
+	{
+		return $this->collection;
+	}
+
 	/**
 	 * Initialization function run on construct
 	 */
 	abstract protected function init();
-	
+
+
 	/**
-	 * Transform Method
+	 * Call methods from the collection
 	 *
-	 * @var array $data
-	 * @return array
+	 * @return mixed
 	 */
-	abstract public function transform($data);
+	public function __call($method, $arguments)
+	{
+		return call_user_func_array([$this->collection,$method],$arguments);
+	}
+
 }
